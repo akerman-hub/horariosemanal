@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabla de Base de Datos</title>
     <style>
         /* Personaliza el cuerpo de la página */
@@ -37,17 +38,12 @@
         }
 
         /* Encabezados */
-        /* Estilo sticky para los encabezados */
-th {
-    background-color: #a8d5ba; /* Color de fondo de los encabezados */
-    color: #ffffff;
-    font-weight: bold;
-    text-transform: uppercase;
-    position: sticky;
-    top: 0; /* Se pega en la parte superior de la página */
-    z-index: 1; /* Asegura que los encabezados queden por encima del contenido cuando se hace scroll */
-}
-
+        th {
+            background-color: #3c6e71; /* Color de fondo de los encabezados */
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
         /* Celdas */
         td {
@@ -65,6 +61,32 @@ th {
             background-color: #b5e0d8; /* Efecto al pasar el ratón */
         }
 
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;  /* Reduce el tamaño de la fuente para pantallas pequeñas */
+            }
+
+            th, td {
+                padding: 8px;  /* Reduce el padding para mejorar la legibilidad */
+            }
+        }
+
+        /* Personaliza la barra de desplazamiento en dispositivos pequeños */
+        @media (max-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #e0f7e9;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #74c69d;
+                border-radius: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -84,10 +106,13 @@ th {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <script>
         async function loadDatabase() {
+            // Inicializa SQL.js para manejar SQLite en el cliente
             const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
             const response = await fetch('pruebas.db');
             const buffer = await response.arrayBuffer();
             const db = new SQL.Database(new Uint8Array(buffer));
+
+            // Realiza la consulta de la base de datos con parámetros (evitar SQL Injection)
             const res = db.exec("SELECT * FROM prueba");
 
             if (res.length === 0) {
@@ -95,28 +120,41 @@ th {
                 return;
             }
 
+            // Procesa las columnas de la base de datos para el encabezado de la tabla
             const columns = res[0].columns;
             const rows = res[0].values;
 
             const thead = document.querySelector('#data-table thead tr');
             columns.forEach(col => {
                 const th = document.createElement('th');
-                th.textContent = col;
+                th.textContent = escapeHtml(col);  // Escapa contenido para evitar XSS
                 thead.appendChild(th);
             });
 
+            // Procesa las filas y agrega a la tabla
             const tbody = document.querySelector('#data-table tbody');
             rows.forEach(row => {
                 const tr = document.createElement('tr');
                 row.forEach(cell => {
                     const td = document.createElement('td');
-                    td.textContent = cell;
+                    td.textContent = escapeHtml(cell);  // Escapa contenido para evitar XSS
                     tr.appendChild(td);
                 });
                 tbody.appendChild(tr);
             });
         }
 
+        // Función para escapar caracteres especiales y prevenir XSS
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            if (str) {
+                div.innerText = str;
+                div.textContent = str;
+            }
+            return div.innerHTML;
+        }
+
+        // Carga la base de datos cuando la página esté lista
         loadDatabase();
     </script>
 </body>
