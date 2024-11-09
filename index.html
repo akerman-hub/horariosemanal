@@ -2,92 +2,143 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabla de Base de Datos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f0fdf4;
-            display: flex;
-            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
         }
 
+        /* Contenedor principal */
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+
+        /* Estilo general de la tabla */
         table {
             width: 100%;
-            max-width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            table-layout: fixed;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        table:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
         th, td {
-            padding: 12px;
+            padding: 16px;
             text-align: center;
-            border: 1px solid #d1f0e1;
-            word-wrap: break-word;
+            border: 1px solid #ddd;
+            font-size: 16px;
             text-overflow: ellipsis;
         }
 
         th {
-            background-color: #3c6e71;
-            color: #ffffff;
-            font-weight: bold;
+            background-color: #6200ea;
+            color: white;
+            font-weight: 500;
             text-transform: uppercase;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        td {
-            background-color: #f0fdf4;
-            color: #333;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         tr:nth-child(even) td {
-            background-color: #e0f7e9;
+            background-color: #f7f7f7;
         }
 
         tr:hover td {
-            background-color: #b5e0d8;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
         }
 
-        /* Aplica el scroll solo en pantallas grandes (PC y tabletas) */
-        @media (min-width: 768px) {
-            table {
-                overflow-x: auto;
-            }
+        /* Estilos del modo oscuro */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
 
-            /* Personaliza la barra de desplazamiento */
-            ::-webkit-scrollbar {
-                width: 8px;
-            }
+        .dark-mode table {
+            background-color: #1f1f1f;
+        }
 
-            ::-webkit-scrollbar-track {
-                background: #e0f7e9;
-            }
+        .dark-mode th {
+            background-color: #6200ea;
+        }
 
-            ::-webkit-scrollbar-thumb {
-                background: #74c69d;
-                border-radius: 10px;
+        .dark-mode td {
+            background-color: #333;
+            color: white;
+        }
+
+        .dark-mode tr:nth-child(even) td {
+            background-color: #444;
+        }
+
+        .dark-mode tr:hover td {
+            background-color: #555;
+        }
+
+        .dark-mode .container {
+            padding: 20px;
+        }
+
+        /* Modo oscuro en switch */
+        .form-check-label {
+            color: #6200ea;
+            font-weight: bold;
+        }
+
+        .form-check-input:checked ~ .form-check-label {
+            color: #bb86fc;
+        }
+
+        /* Estilos de la barra de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6200ea;
+            border-radius: 10px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="table-container">
-        <table id="data-table">
+    <div class="container">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="darkModeToggle">
+            <label class="form-check-label" for="darkModeToggle">Modo Oscuro</label>
+        </div>
+
+        <table id="data-table" class="table table-bordered table-striped">
             <thead>
-                <tr>
-                    <!-- Las cabeceras se llenarán con JavaScript -->
-                </tr>
+                <tr></tr>
             </thead>
-            <tbody>
-                <!-- Los datos de la tabla se llenarán con JavaScript -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 
@@ -128,6 +179,12 @@
         }
 
         loadDatabase();
+
+        // Toggle Dark Mode
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+        });
     </script>
 </body>
 </html>
