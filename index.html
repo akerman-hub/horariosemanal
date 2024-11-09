@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabla de Base de Datos</title>
     <style>
         body {
@@ -22,7 +21,6 @@
             margin-top: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
             table-layout: fixed;
         }
 
@@ -57,17 +55,13 @@
             background-color: #b5e0d8;
         }
 
-        @media (max-width: 768px) {
+        /* Aplica el scroll solo en pantallas grandes (PC y tabletas) */
+        @media (min-width: 768px) {
             table {
-                font-size: 14px;
+                overflow-x: auto;
             }
 
-            th, td {
-                padding: 8px;
-            }
-        }
-
-        @media (max-width: 768px) {
+            /* Personaliza la barra de desplazamiento */
             ::-webkit-scrollbar {
                 width: 8px;
             }
@@ -87,9 +81,13 @@
     <div class="table-container">
         <table id="data-table">
             <thead>
-                <tr></tr>
+                <tr>
+                    <!-- Las cabeceras se llenarán con JavaScript -->
+                </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                <!-- Los datos de la tabla se llenarán con JavaScript -->
+            </tbody>
         </table>
     </div>
 
@@ -100,7 +98,6 @@
             const response = await fetch('pruebas.db');
             const buffer = await response.arrayBuffer();
             const db = new SQL.Database(new Uint8Array(buffer));
-
             const res = db.exec("SELECT * FROM prueba");
 
             if (res.length === 0) {
@@ -114,7 +111,7 @@
             const thead = document.querySelector('#data-table thead tr');
             columns.forEach(col => {
                 const th = document.createElement('th');
-                th.textContent = escapeHtml(col);
+                th.textContent = col;
                 thead.appendChild(th);
             });
 
@@ -123,20 +120,11 @@
                 const tr = document.createElement('tr');
                 row.forEach(cell => {
                     const td = document.createElement('td');
-                    td.textContent = escapeHtml(cell);
+                    td.textContent = cell;
                     tr.appendChild(td);
                 });
                 tbody.appendChild(tr);
             });
-        }
-
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            if (str) {
-                div.innerText = str;
-                div.textContent = str;
-            }
-            return div.innerHTML;
         }
 
         loadDatabase();
