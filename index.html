@@ -34,16 +34,20 @@
             border: 1px solid #d1f0e1;  /* Borde suave verde menta */
             word-wrap: break-word;  /* Evita que las palabras se salgan de las celdas */
             text-overflow: ellipsis;  /* Añade puntos suspensivos si el texto es largo */
-            position: sticky;
         }
 
         /* Encabezados */
-        th {
-            background-color: #a8d5ba; /* Color de fondo de los encabezados */
-            color: #ffffff;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
+        /* Estilo sticky para los encabezados */
+th {
+    background-color: #a8d5ba; /* Color de fondo de los encabezados */
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0; /* Se pega en la parte superior de la página */
+    z-index: 1; /* Asegura que los encabezados queden por encima del contenido cuando se hace scroll */
+}
+
 
         /* Celdas */
         td {
