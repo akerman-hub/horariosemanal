@@ -39,11 +39,14 @@
 
         /* Encabezados */
         th {
-            background-color: #3c6e71; /* Color de fondo de los encabezados */
+            background-color: #a8d5ba; /* Color de fondo de los encabezados */
             color: #ffffff;
             font-weight: bold;
             text-transform: uppercase;
-        }
+            position: sticky;
+            top: 0; /* Se pega en la parte superior de la página */
+            z-index: 1; /* Asegura que los encabezados queden por encima del contenido cuando se hace scroll */
+}
 
         /* Celdas */
         td {
