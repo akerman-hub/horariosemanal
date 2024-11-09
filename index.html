@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Base de Datos</title>
+    <style>
+        /* Personaliza el cuerpo de la página */
+        body {
+            background-color: #f0fdf4;  /* Color de fondo menta claro */
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Estilos para la tabla */
+        table {
+            width: 100%;  /* Hace que la tabla ocupe el 100% del ancho disponible */
+            max-width: 100%;  /* Asegura que no se desborde fuera de la pantalla */
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;  /* Permite desplazamiento horizontal si es necesario */
+            table-layout: fixed;  /* Hace que las celdas de la tabla tengan un ancho uniforme */
+        }
+
+        /* Estilos para las celdas */
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #d1f0e1;  /* Borde suave verde menta */
+            word-wrap: break-word;  /* Evita que las palabras se salgan de las celdas */
+            text-overflow: ellipsis;  /* Añade puntos suspensivos si el texto es largo */
+        }
+
+        /* Encabezados */
+        th {
+            background-color: #a8d5ba; /* Color de fondo de los encabezados */
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Celdas */
+        td {
+            background-color: #f0fdf4;  /* Fondo suave para las celdas */
+            color: #333;
+        }
+
+        /* Estilo para filas pares */
+        tr:nth-child(even) td {
+            background-color: #e0f7e9; /* Fila par con fondo verde suave */
+        }
+
+        /* Efecto de hover en las filas */
+        tr:hover td {
+            background-color: #b5e0d8; /* Efecto al pasar el ratón */
+        }
+
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;  /* Reduce el tamaño de la fuente para pantallas pequeñas */
+            }
+
+            th, td {
+                padding: 8px;  /* Reduce el padding para mejorar la legibilidad */
+            }
+        }
+
+        /* Personaliza la barra de desplazamiento en dispositivos pequeños */
+        @media (max-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #e0f7e9;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #74c69d;
+                border-radius: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <!-- Las cabeceras se llenarán con JavaScript -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos de la tabla se llenarán con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script>
+        async function loadDatabase() {
+            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+            const response = await fetch('pruebas.db');
+            const buffer = await response.arrayBuffer();
+            const db = new SQL.Database(new Uint8Array(buffer));
+            const res = db.exec("SELECT * FROM prueba");
+
+            if (res.length === 0) {
+                console.log("No se encontraron resultados.");
+                return;
+            }
+
+            const columns = res[0].columns;
+            const rows = res[0].values;
+
+            const thead = document.querySelector('#data-table thead tr');
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                thead.appendChild(th);
+            });
+
+            const tbody = document.querySelector('#data-table tbody');
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        loadDatabase();
+    </script>
+</body>
+</html>
